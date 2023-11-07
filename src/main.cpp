@@ -1,12 +1,13 @@
 
 #include <Wire.h>
 #include <SPI.h>
-#include <Adafruit_PWMServoDriver.h>
+#include <Adafruit_PWMServoDriver.h>  //pca9685
+#include <Servo.h> 
 
 #include <EnableInterrupt.h>
 
 #define pin_INT_Throttle 11  // Pin Throttle
-#define pin_INT_Yaw 10      // Pin Yaw       // Varill 7 timón
+#define pin_INT_Yaw 10      // Pin Yaw       // Varilla 7 timón
 #define pin_INT_Pitch 12   // Pin Pitch     // Varilla 11 profundidad
 #define pin_INT_Roll 9    // Pin Roll
 #define status_led 13    // Off: starting, Blink: calbration mode, On: Flight mode
@@ -18,6 +19,10 @@ int Vel = 100;
 int Time = 0;
 float P = 0.75;
 
+int tvel = 1000;
+boolean tcontrol=false; 
+Servo myESC;
+
 unsigned int pos0=172;    // ancho de pulso en cuentas para pocicion 0°
 unsigned int pos180=565; // ancho de pulso en cuentas para la pocicion 180°
 
@@ -28,7 +33,7 @@ unsigned int pos180=565; // ancho de pulso en cuentas para la pocicion 180°
 
 void setServo(uint8_t n_servo, int angulo) {
   int duty;
-  duty=map(angulo,0,180,pos0, pos180);
+  duty=map(angulo, 0, 180, pos0, pos180);
   servos.setPWM(n_servo, 0, duty);  
 }
 
@@ -46,11 +51,15 @@ int mapYawToServoPosition(int yawValue) {
 
 int mapPitchToServoPosition(int pitchValue) {
   int servoPosition;
-
   servoPosition = map(pitchValue, 1104, 1930, 0, 180);
-
   servoPosition = constrain(servoPosition, 0, 180);
   return servoPosition;
+}
+
+void setThrottle(int throttleValue) {
+  // Mapea el valor de RC_Throttle_raw (1060-1724) al rango del variador (1000-2000)
+  int mappedThrottle = map(throttleValue, 1060, 1724, 1000, 2000);
+  servos.setPWM(12, 0, mappedThrottle);  // Utiliza el canal 0 de la PCA9685 para controlar el variador
 }
 
 
@@ -129,4 +138,5 @@ void loop() {
 
   setServo(7, mapYawToServoPosition(RC_Yaw_raw));
   setServo(11, mapPitchToServoPosition(RC_Pitch_raw));
+  setThrottle(RC_Throttle_raw);
 }
