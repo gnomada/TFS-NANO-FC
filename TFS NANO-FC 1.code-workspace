@@ -11,6 +11,26 @@
 		{
 			"name": "ESC test",
 			"path": "../../../PlatformIO/Projects/ESC test"
+		},
+		{
+			"name": "TFS Nano ASC",
+			"path": "../../TFS SnoopBot/TFS Nano ASC"
+		},
+		{
+			"name": "SnoopDog",
+			"path": "../../../PlatformIO/Projects/SnoopDog"
+		},
+		{
+			"name": "NordicChicken",
+			"path": "../../../PlatformIO/Projects/NordicChicken"
+		},
+		{
+			"name": "CH Avionics",
+			"path": "../../../PlatformIO/Projects/CH Avionics"
+		},
+		{
+			"name": "TFS Nano Nordic Transceiver",
+			"path": "../../../PlatformIO/Projects/TFS Nano Nordic Transceiver"
 		}
 	],
 	"settings": {}

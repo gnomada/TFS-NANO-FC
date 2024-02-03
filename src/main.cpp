@@ -29,6 +29,9 @@ Servo ESC;
 unsigned int pos0=172;    // ancho de pulso en cuentas para pocicion 0°
 unsigned int pos180=565; // ancho de pulso en cuentas para la pocicion 180°
 
+unsigned int pot_0 = 1000;
+unsigned int pot_100 = 2000;
+
 // Maps
 
 
@@ -38,6 +41,13 @@ void setServo(uint8_t n_servo, int angulo) {
   int duty;
   duty=map(angulo, 0, 180, pos0, pos180);
   servos.setPWM(n_servo, 0, duty);  
+}
+
+void setPotServo(uint8_t n_servo, int angulo) {
+  int duty;
+  duty=map(angulo, 1000, 2000, pot_0, pot_100);
+  //servos.setPWM(n_servo, 0, duty);
+  servos.writeMicroseconds(n_servo, angulo);
 }
 
 int mapYawToServoPosition(int yawValue) {
@@ -69,6 +79,14 @@ int mapRollToServoPosition(int rollValue) {
   int servoPosition;
   servoPosition = map(rollValue, 1040, 1960, 65, 115); // Mapear de 50 grados a 130 grados (180 - 50)
   servoPosition = constrain(servoPosition, 65, 115); // Limitar el rango a 50 grados
+  return servoPosition;
+}
+
+int mapThrottleToServoPosition(int throttleValue) {
+  int servoPosition;
+  servoPosition = map(throttleValue, 1080, 1712, 1000, 2000);
+  servoPosition = constrain(servoPosition, 1000, 2000);
+  Serial.println(servoPosition);
   return servoPosition;
 }
 
@@ -117,7 +135,7 @@ void INT_Yaw() {
 
 void setup() {
   servos.begin();  
-  servos.setPWMFreq(60); //Frecuecia PWM de 60Hz o T=16,66ms
+  servos.setPWMFreq(50); //Frecuecia PWM de 60Hz o T=16,66ms
 
   // Declaración de interrupciones
   pinMode(pin_INT_Yaw, INPUT_PULLUP);                   // YAW
@@ -148,6 +166,7 @@ void loop() {
   loop_timer = micros();
 
   // Monitor Serie
+  /*
   Serial.print(RC_Throttle_raw);
   Serial.print("\t");
   Serial.print(RC_Pitch_raw);
@@ -155,11 +174,13 @@ void loop() {
   Serial.print(RC_Roll_raw);
   Serial.print("\t");
   Serial.println(RC_Yaw_raw);
+  */
 
   setServo(7, mapYawToServoPosition(RC_Yaw_raw));
   setServo(11, mapPitchToServoPosition(RC_Pitch_raw));
   setServo(15, mapRollToServoPosition(RC_Roll_raw));
-  setThrottle(RC_Throttle_raw);
+  //setThrottle(RC_Throttle_raw);
+  setPotServo(3, mapThrottleToServoPosition(RC_Throttle_raw));
 
 // 1060, 1712
   if (RC_Throttle_raw <= 1350)
