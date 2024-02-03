@@ -3,6 +3,14 @@
 		{
 			"name": "TFS NANO-FC 1",
 			"path": "."
+		},
+		{
+			"name": "bn220 test",
+			"path": "../../../PlatformIO/Projects/bn220 test"
+		},
+		{
+			"name": "ESC test",
+			"path": "../../../PlatformIO/Projects/ESC test"
 		}
 	],
 	"settings": {}

@@ -9,8 +9,11 @@
 #define pin_INT_Throttle 11  // Pin Throttle
 #define pin_INT_Yaw 10      // Pin Yaw       // Varilla 7 timón
 #define pin_INT_Pitch 12   // Pin Pitch     // Varilla 11 profundidad
-#define pin_INT_Roll 9    // Pin Roll
+#define pin_INT_Roll 9    // Pin Roll      // Varilla 15 balanceo
 #define status_led 13    // Off: starting, Blink: calbration mode, On: Flight mode
+
+#define pin_esc 5
+
 
 Adafruit_PWMServoDriver servos = Adafruit_PWMServoDriver(0x40);
 long loop_timer, tiempo_ejecucion;
@@ -21,7 +24,7 @@ float P = 0.75;
 
 int tvel = 1000;
 boolean tcontrol=false; 
-Servo myESC;
+Servo ESC;
 
 unsigned int pos0=172;    // ancho de pulso en cuentas para pocicion 0°
 unsigned int pos180=565; // ancho de pulso en cuentas para la pocicion 180°
@@ -40,28 +43,39 @@ void setServo(uint8_t n_servo, int angulo) {
 int mapYawToServoPosition(int yawValue) {
   int servoPosition;
 
-  // Map the yawValue to a servo position between 0 and 180 degrees
-  // Adjust the values (minInput, maxInput, minOutput, maxOutput) as needed for your specific case
-  servoPosition = map(yawValue, 970, 1980, 0, 180);
+  servoPosition = map(yawValue, 970, 1980, 65, 115); // Mapear de 50 grados a 130 grados (180 - 50)
+  servoPosition = constrain(servoPosition, 65, 115); // Limitar el rango a 50 grados
 
-  // Ensure the servo position is within valid range
-  servoPosition = constrain(servoPosition, 0, 180);
   return servoPosition;
 }
 
+/* old : todo el angulo para lso servos
+int mapYawToServoPosition(int yawValue) {
+  int servoPosition;
+  servoPosition = map(yawValue, 970, 1980, 0, 180);
+  servoPosition = constrain(servoPosition, 0, 180);
+  return servoPosition;
+}
+*/
+
 int mapPitchToServoPosition(int pitchValue) {
   int servoPosition;
-  servoPosition = map(pitchValue, 1104, 1930, 0, 180);
-  servoPosition = constrain(servoPosition, 0, 180);
+  servoPosition = map(pitchValue, 1104, 1930, 65, 115); // Mapear de 50 grados a 130 grados (180 - 50)
+  servoPosition = constrain(servoPosition, 65, 115); // Limitar el rango a 50 grados
+  return servoPosition;
+}
+
+int mapRollToServoPosition(int rollValue) {
+  int servoPosition;
+  servoPosition = map(rollValue, 1040, 1960, 65, 115); // Mapear de 50 grados a 130 grados (180 - 50)
+  servoPosition = constrain(servoPosition, 65, 115); // Limitar el rango a 50 grados
   return servoPosition;
 }
 
 void setThrottle(int throttleValue) {
-  // Mapea el valor de RC_Throttle_raw (1060-1724) al rango del variador (1000-2000)
-  int mappedThrottle = map(throttleValue, 1060, 1724, 1000, 2000);
-  servos.setPWM(12, 0, mappedThrottle);  // Utiliza el canal 0 de la PCA9685 para controlar el variador
+  int mappedThrottle = map(throttleValue, 1060, 1712, 950, 2000);
+  servos.setPWM(3, 0, mappedThrottle);
 }
-
 
 // Interrupciones
 
@@ -108,7 +122,7 @@ void setup() {
   // Declaración de interrupciones
   pinMode(pin_INT_Yaw, INPUT_PULLUP);                   // YAW
   enableInterrupt(pin_INT_Yaw, INT_Yaw, CHANGE);
-  pinMode(pin_INT_Throttle, INPUT_PULLUP);              // POTENCIA
+  pinMode(pin_INT_Throttle, INPUT_PULLUP);              // Throttle
   enableInterrupt(pin_INT_Throttle, INT_Throttle, CHANGE);
   pinMode(pin_INT_Pitch, INPUT_PULLUP);                 // PITCH
   enableInterrupt(pin_INT_Pitch, INT_Pitch, CHANGE);
@@ -116,12 +130,18 @@ void setup() {
   enableInterrupt(pin_INT_Roll, INT_Roll, CHANGE);
 
   pinMode(status_led, OUTPUT);
+  //pinMode(pin_esc, OUTPUT);
+  //analogWrite(pin_esc, 100);
+
+  //ESC.attach(pin_esc);
+  //ESC.writeMicroseconds(1000);
+  //delay(3000);
+  //ESC.writeMicroseconds(2000);
 
   Serial.begin(115200);
 }
 
 void loop() {
-  digitalWrite(status_led, HIGH);
 
   while (micros() - loop_timer < 10000);
   tiempo_ejecucion = (micros() - loop_timer) / 1000;
@@ -138,5 +158,16 @@ void loop() {
 
   setServo(7, mapYawToServoPosition(RC_Yaw_raw));
   setServo(11, mapPitchToServoPosition(RC_Pitch_raw));
+  setServo(15, mapRollToServoPosition(RC_Roll_raw));
   setThrottle(RC_Throttle_raw);
+
+// 1060, 1712
+  if (RC_Throttle_raw <= 1350)
+  {
+    digitalWrite(status_led, HIGH);
+  }
+  else
+  {
+    digitalWrite(status_led, LOW);
+  }
 }
