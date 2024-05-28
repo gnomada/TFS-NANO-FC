@@ -31,6 +31,14 @@
 		{
 			"name": "TFS Nano Nordic Transceiver",
 			"path": "../../../PlatformIO/Projects/TFS Nano Nordic Transceiver"
+		},
+		{
+			"name": "CH-A",
+			"path": "../../../../Desktop/CH/CH-A"
+		},
+		{
+			"name": "TFS Tank",
+			"path": "../../../PlatformIO/Projects/TFS Tank"
 		}
 	],
 	"settings": {}
