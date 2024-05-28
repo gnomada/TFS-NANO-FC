@@ -2,6 +2,8 @@
 
 ![nanofc](https://github.com/gnomada/TFS-NANO-FC/blob/main/assets/photo1.jpg?raw=true)
 
+![motor](https://github.com/gnomada/TFS-NANO-FC/raw/main/assets/video1.mp4)
+
 
 Este proyecto es un sistema de control para aviones RC basado en Arduino, utilizando el controlador de servos PWM Adafruit PCA9685 y motores servo. El sistema lee la entrada de un transmisor RC y ajusta el acelerador, el timón (yaw), la profundidad (pitch) y el balanceo (roll) del avión en consecuencia.
 
