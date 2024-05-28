@@ -1,5 +1,8 @@
 # Sistema de Control (Flight Controller) para avión RC con Arduino Nano
 
+![nanofc](https://github.com/gnomada/TFS-NANO-FC/blob/main/assets/photo1.jpg?raw=true)
+
+
 Este proyecto es un sistema de control para aviones RC basado en Arduino, utilizando el controlador de servos PWM Adafruit PCA9685 y motores servo. El sistema lee la entrada de un transmisor RC y ajusta el acelerador, el timón (yaw), la profundidad (pitch) y el balanceo (roll) del avión en consecuencia.
 
 He utilizado un mando y receptor Fly Sky FS T4-B y he seguido los ejemplos/código de [Arduproject](https://arduproject.es/conceptos-generales-sobre-drones/).
