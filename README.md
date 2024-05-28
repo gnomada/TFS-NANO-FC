@@ -6,7 +6,7 @@ He utilizado un mando y receptor Fly Sky FS T4-B y he seguido los ejemplos/códi
 
 El variador es uno genérico de AliExpress.
 
-He sado la placa PCA9685 de Adafruit para que el mismo hardware sea compatible con más servos en el futuro y no tener que hacer muchos cambios de código, pero puedes prescindir de esto.
+He usado la placa PCA9685 de Adafruit para que el mismo hardware sea compatible con más servos en el futuro y no tener que hacer muchos cambios de código, pero puedes prescindir de esto.
 
 
 ## Componentes
@@ -15,6 +15,7 @@ He sado la placa PCA9685 de Adafruit para que el mismo hardware sea compatible c
 - Motores Servo
 - Controlador Electrónico de Velocidad (ESC)
 - Transmisor y Receptor RC
+- Batería
 
 ## Definiciones de Pines
 - `pin_INT_Throttle`: Pin 11 (Acelerador - Canal 3 del RC)
